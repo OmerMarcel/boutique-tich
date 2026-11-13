@@ -30,6 +30,10 @@ Définissez la variable globale dans votre HTML ou avant le chargement du script
 </script>
 ```
 
+Avec les configurations Vercel fournies, l'API est normalement consommée via les
+réécritures `/api` et `/uploads`. Pour un hébergement différent, définissez
+`window.TICH_BACKEND_URL` explicitement.
+
 ---
 
 ## 📂 Contenu du dossier

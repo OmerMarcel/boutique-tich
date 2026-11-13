@@ -52,7 +52,7 @@ Tableau de bord de gestion des pièces et des stocks.
   ```
 - **Déploiement possible** : Vercel, Netlify, hébergement interne sécurisé.
 - Se connecte automatiquement à `http://localhost:5000/api` en local.
-- Identifiants par défaut : `admin` / `TichAdmin2024!`
+- Les identifiants doivent être configurés explicitement dans le fichier `.env` du backend.
 
 ---
 

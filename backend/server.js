@@ -8,15 +8,39 @@ const { initDB } = require("./db/database");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Autorise tous les clients et dashboards (CORS cross-origin)
+const allowedOrigins = new Set(
+  (process.env.CORS_ORIGINS || "http://localhost:3000,http://localhost:3001")
+    .split(",")
+    .map(origin => origin.trim())
+    .filter(Boolean)
+);
+
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  throw new Error("JWT_SECRET doit être défini et contenir au moins 32 caractères.");
+}
+if (!process.env.ADMIN_USERNAME || (!process.env.ADMIN_PASSWORD && !process.env.ADMIN_PASSWORD_HASH)) {
+  throw new Error("ADMIN_USERNAME et ADMIN_PASSWORD_HASH (ou ADMIN_PASSWORD) sont requis.");
+}
+
+app.disable("x-powered-by");
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "same-origin");
+  next();
+});
+
 app.use(cors({
-  origin: "*",
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin)) return callback(null, true);
+    return callback(new Error("Origine CORS non autorisée"));
+  },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: false, limit: "100kb" }));
 
 // Fichiers uploadés (photos de produits)
 const uploadsDir = path.join(__dirname, "uploads");
@@ -42,6 +66,12 @@ app.get("/", (req, res) => {
       uploads: "/uploads"
     }
   });
+});
+
+app.use((err, req, res, next) => {
+  console.error("Erreur middleware API:", err);
+  if (res.headersSent) return next(err);
+  res.status(400).json({ error: "Requête invalide" });
 });
 
 // Démarrage du serveur après initialisation de la base (Supabase ou SQLite local)

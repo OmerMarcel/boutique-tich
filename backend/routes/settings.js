@@ -31,7 +31,7 @@ router.post("/whatsapp", requireAuth, async (req, res) => {
     res.json({ success: true, whatsapp: clean });
   } catch (e) {
     console.error("Erreur POST /api/settings/whatsapp:", e);
-    res.status(500).json({ error: "Erreur serveur: " + e.message });
+    res.status(500).json({ error: "Erreur serveur" });
   }
 });
 
@@ -49,7 +49,7 @@ router.put("/whatsapp", requireAuth, async (req, res) => {
     res.json({ success: true, whatsapp: clean });
   } catch (e) {
     console.error("Erreur PUT /api/settings/whatsapp:", e);
-    res.status(500).json({ error: "Erreur serveur: " + e.message });
+    res.status(500).json({ error: "Erreur serveur" });
   }
 });
 

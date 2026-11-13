@@ -15,6 +15,15 @@ const API_BASE = BACKEND_URL;
 
 const DEFAULT_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100%' height='100%' fill='%23f1f1f1'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%23999'>TICH</text></svg>";
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function resolveAdminMediaUrl(url) {
   if (!url) return DEFAULT_PLACEHOLDER;
   if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) {
@@ -84,6 +93,7 @@ async function loadProducts() {
     renderTable();
   } catch (e) {
     console.error("Erreur chargement produits:", e);
+    showToast("Impossible de charger le catalogue. Vérifiez la connexion à l'API.");
   }
 }
 
@@ -205,35 +215,35 @@ function renderTable() {
     }
 
     return `
-      <tr data-row-id="${p.id}">
+      <tr data-row-id="${escapeHtml(p.id)}">
         <td>
           <div class="adm-prod-cell">
-            <img src="${resolveAdminMediaUrl(p.image)}" class="adm-thumb" alt="${p.name}" onerror="this.onerror=null;this.src='${DEFAULT_PLACEHOLDER}';" />
+            <img src="${escapeHtml(resolveAdminMediaUrl(p.image))}" class="adm-thumb" alt="${escapeHtml(p.name)}" onerror="this.onerror=null;this.src='${DEFAULT_PLACEHOLDER}';" />
             <div class="adm-prod-meta">
-              <strong>${p.name}</strong>
-              <small>Réf : ${p.id} ${p.type ? `· ${p.type}` : ""}</small>
-              ${p.tag ? `<span class="adm-tag-badge">${p.tag}</span>` : ""}
+              <strong>${escapeHtml(p.name)}</strong>
+              <small>Réf : ${escapeHtml(p.id)} ${p.type ? `· ${escapeHtml(p.type)}` : ""}</small>
+              ${p.tag ? `<span class="adm-tag-badge">${escapeHtml(p.tag)}</span>` : ""}
             </div>
           </div>
         </td>
         <td>
-          <strong>${p.category}</strong>
-          <small style="display: block; color: var(--admin-muted); font-size: 11.5px;">${p.subCategory}</small>
+          <strong>${escapeHtml(p.category)}</strong>
+          <small style="display: block; color: var(--admin-muted); font-size: 11.5px;">${escapeHtml(p.subCategory)}</small>
         </td>
         <td class="adm-price-cell">${money(p.price)}</td>
         <td>${pillHtml}</td>
         <td>
           <div class="adm-stock-cell">
             <div class="adm-stock-counter">
-              <button class="adm-stock-btn" data-minus="${p.id}" title="Diminuer de 1">−</button>
-              <input type="number" class="adm-stock-input" min="0" value="${st}" data-input="${p.id}" title="Modifier directement le stock" />
-              <button class="adm-stock-btn" data-plus="${p.id}" title="Augmenter de 1">+</button>
+              <button class="adm-stock-btn" data-minus="${escapeHtml(p.id)}" title="Diminuer de 1">−</button>
+              <input type="number" class="adm-stock-input" min="0" value="${st}" data-input="${escapeHtml(p.id)}" title="Modifier directement le stock" />
+              <button class="adm-stock-btn" data-plus="${escapeHtml(p.id)}" title="Augmenter de 1">+</button>
             </div>
             ${st > 0 
-              ? `<button type="button" class="adm-btn-rupture is-out" data-toggle-rupture="${p.id}" data-action="rupture" title="Déclarer ce produit en rupture de stock immédiate (stock = 0)">
+              ? `<button type="button" class="adm-btn-rupture is-out" data-toggle-rupture="${escapeHtml(p.id)}" data-action="rupture" title="Déclarer ce produit en rupture de stock immédiate (stock = 0)">
                    🚫 Rupture de stock
                  </button>`
-              : `<button type="button" class="adm-btn-rupture is-restore" data-toggle-rupture="${p.id}" data-action="restore" title="Rétablir ce produit en stock (+10 unités)">
+              : `<button type="button" class="adm-btn-rupture is-restore" data-toggle-rupture="${escapeHtml(p.id)}" data-action="restore" title="Rétablir ce produit en stock (+10 unités)">
                    🔄 Remettre en stock (+10)
                  </button>`
             }
@@ -241,8 +251,8 @@ function renderTable() {
         </td>
         <td style="text-align: right;">
           <div class="adm-row-actions">
-            <button class="adm-icon-btn" data-edit="${p.id}" title="Modifier cette pièce">✏️</button>
-            <button class="adm-icon-btn delete" data-delete="${p.id}" title="Supprimer du catalogue">🗑️</button>
+            <button class="adm-icon-btn" data-edit="${escapeHtml(p.id)}" title="Modifier cette pièce">✏️</button>
+            <button class="adm-icon-btn delete" data-delete="${escapeHtml(p.id)}" title="Supprimer du catalogue">🗑️</button>
           </div>
         </td>
       </tr>
@@ -503,11 +513,7 @@ async function saveWhatsAppNumber() {
     updateAdminWaButtonLabel(val);
   } catch (e) {
     console.error("Erreur enregistrement WhatsApp:", e);
-    // Sauvegarde de secours en localStorage
-    localStorage.setItem("tich-wa-number", val);
-    closeWhatsAppModal();
-    showToast(`Numéro WhatsApp mis à jour : +${val} (cache local)`);
-    updateAdminWaButtonLabel(val);
+    showToast("Échec de synchronisation du numéro WhatsApp. Aucune modification distante n'a été appliquée.");
   } finally {
     if (saveBtn) {
       saveBtn.disabled = false;
@@ -571,6 +577,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   const logoutBtn = document.getElementById("btn-logout");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => { clearToken(); showLoginPage(); });
+  }
+
+  const clientStoreLink = document.getElementById("admClientStoreLink");
+  if (clientStoreLink) {
+    const configuredClientUrl = window.TICH_CLIENT_URL;
+    if (configuredClientUrl) {
+      clientStoreLink.href = configuredClientUrl;
+    } else if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      clientStoreLink.href = "http://localhost:3000";
+    } else {
+      clientStoreLink.removeAttribute("href");
+      clientStoreLink.setAttribute("aria-disabled", "true");
+      clientStoreLink.title = "Configurez TICH_CLIENT_URL pour activer ce lien";
+    }
   }
 
   // Filtres & Recherche

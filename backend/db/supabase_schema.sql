@@ -50,13 +50,13 @@ CREATE POLICY "Lecture publique des produits"
 -- Accès complet pour l'API backend (admin)
 CREATE POLICY "Accès complet service backend"
   ON public.products FOR ALL
-  TO anon, authenticated, service_role
+  TO service_role
   USING (true)
   WITH CHECK (true);
 
 CREATE POLICY "Accès complet settings service"
   ON public.settings FOR ALL
-  TO anon, authenticated, service_role
+  TO service_role
   USING (true)
   WITH CHECK (true);
 
@@ -74,4 +74,5 @@ CREATE POLICY "Lecture publique du bucket products"
 
 CREATE POLICY "Upload dans le bucket products"
   ON storage.objects FOR INSERT
+  TO service_role
   WITH CHECK (bucket_id = 'products');

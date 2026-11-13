@@ -26,9 +26,10 @@ Créez un fichier `.env` (ou utilisez le modèle `.env.example`) :
 
 ```env
 PORT=5000
-JWT_SECRET=votre_cle_secrete_jwt
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=TichAdmin2024!
+JWT_SECRET=une_valeur_aleatoire_d_au_moins_32_caracteres
+ADMIN_USERNAME=votre_identifiant
+ADMIN_PASSWORD_HASH=un_hash_bcrypt_recommande
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001
 
 # Supabase (PostgreSQL Cloud)
 SUPABASE_URL=https://votre-projet.supabase.co
@@ -40,6 +41,8 @@ SUPABASE_KEY=votre_cle_anon_ou_service_role
 2. Dans **SQL Editor**, copiez et exécutez le script [db/supabase_schema.sql](./db/supabase_schema.sql).
 3. Renseignez `SUPABASE_URL` et `SUPABASE_KEY` dans votre `.env`.
 4. Si les variables Supabase ne sont pas renseignées, l'API bascule automatiquement en SQLite local transparent.
+
+Les valeurs d'authentification doivent être définies explicitement : l'API ne fournit plus de compte ni de secret par défaut.
 
 ---
 

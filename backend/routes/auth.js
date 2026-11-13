@@ -2,7 +2,15 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { db } = require("../db/database");
+
+const attempts = new Map();
+const WINDOW_MS = 15 * 60 * 1000;
+const MAX_ATTEMPTS = 10;
+const configuredPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+const configuredPassword = process.env.ADMIN_PASSWORD;
+const passwordHashPromise = configuredPasswordHash
+  ? Promise.resolve(configuredPasswordHash)
+  : bcrypt.hash(configuredPassword, 12);
 
 router.post("/login", async (req, res) => {
   try {
@@ -11,39 +19,45 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Identifiants manquants" });
     }
 
-    const expectedUser = process.env.ADMIN_USERNAME || "admin";
-    const expectedPass = process.env.ADMIN_PASSWORD || "TichAdmin2024!";
+    const expectedUser = process.env.ADMIN_USERNAME;
+    const source = req.ip || "unknown";
+    const now = Date.now();
+    const attempt = attempts.get(source);
+    if (attempt && now - attempt.startedAt < WINDOW_MS && attempt.count >= MAX_ATTEMPTS) {
+      return res.status(429).json({ error: "Trop de tentatives. Réessayez plus tard." });
+    }
+    if (attempt && now - attempt.startedAt >= WINDOW_MS) attempts.delete(source);
 
     if (username !== expectedUser) {
+      registerFailure(source);
       return res.status(401).json({ error: "Identifiants incorrects" });
     }
 
-    // Vérifie le hash de mot de passe stocké
-    const storedHash = await db.getSetting("admin_password_hash");
-    let valid = false;
-
-    if (storedHash) {
-      valid = await bcrypt.compare(password, storedHash);
-    } else {
-      // Première connexion : comparaison directe puis stockage du hash
-      valid = (password === expectedPass);
-      if (valid) {
-        const hash = await bcrypt.hash(expectedPass, 10);
-        await db.setSetting("admin_password_hash", hash);
-      }
-    }
+    const passwordHash = await passwordHashPromise;
+    const valid = await bcrypt.compare(password, passwordHash);
 
     if (!valid) {
+      registerFailure(source);
       return res.status(401).json({ error: "Identifiants incorrects" });
     }
 
-    const secret = process.env.JWT_SECRET || "tich_jwt_secret_dev_key";
-    const token = jwt.sign({ role: "admin", username }, secret, { expiresIn: "24h" });
+    attempts.delete(source);
+    const token = jwt.sign({ role: "admin", username }, process.env.JWT_SECRET, { expiresIn: "24h" });
     res.json({ token, expiresIn: "24h" });
   } catch (e) {
     console.error("Erreur login:", e);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
+
+function registerFailure(source) {
+  const now = Date.now();
+  const current = attempts.get(source);
+  if (!current || now - current.startedAt >= WINDOW_MS) {
+    attempts.set(source, { startedAt: now, count: 1 });
+  } else {
+    current.count += 1;
+  }
+}
 
 module.exports = router;

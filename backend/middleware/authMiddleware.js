@@ -8,6 +8,9 @@ function requireAuth(req, res, next) {
   const token = authHeader.split(" ")[1];
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
+    if (!payload || payload.role !== "admin") {
+      return res.status(403).json({ error: "Droits administrateur requis" });
+    }
     req.admin = payload;
     next();
   } catch (e) {

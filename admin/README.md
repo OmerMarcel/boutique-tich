@@ -14,7 +14,7 @@ npm start
 Puis accédez à :
 👉 `http://localhost:3001`
 
-*(Identifiants par défaut : utilisateur `admin` / mot de passe `TichAdmin2024!` configurables dans le backend)*
+*(Les identifiants sont obligatoirement configurés dans le fichier `.env` du backend.)*
 
 ---
 
@@ -28,6 +28,9 @@ Pour personnaliser l'adresse de l'API (ex: API hébergée sur Render ou Supabase
   window.TICH_BACKEND_URL = "https://mon-api-tich.railway.app";
 </script>
 ```
+
+Pour activer le bouton « Voir la Boutique » en production, définissez également
+`window.TICH_CLIENT_URL` avant le chargement de `admin.js`.
 
 ---
 

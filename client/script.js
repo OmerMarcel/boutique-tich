@@ -9,6 +9,15 @@
 // Numéro WhatsApp par défaut ou synchronisé depuis la base de données
 let WHATSAPP_PHONE = localStorage.getItem("tich-wa-number") || "33612345678";
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function updateFloatingWhatsAppLink() {
   const floatingWA = document.getElementById("floatingWhatsApp");
   if (floatingWA) {
@@ -493,7 +502,8 @@ async function loadProductsFromAPI() {
     }));
   } catch (e) {
     console.error("Catalogue inaccessible:", e);
-    return [];
+    showToast("Le catalogue est temporairement inaccessible. Réessayez dans quelques instants.");
+    return null;
   }
 }
 
@@ -552,35 +562,35 @@ function productMarkup(list) {
     if (isOutOfStock) {
       badgeHtml = `<span class="tag tag-rupture">RUPTURE DE STOCK</span>`;
     } else if (p.tag) {
-      badgeHtml = `<span class="tag">${p.tag}</span>`;
+      badgeHtml = `<span class="tag">${escapeHtml(p.tag)}</span>`;
     } else if (isLowStock) {
       badgeHtml = `<span class="tag tag-low-stock">Plus que ${stock} restant${stock > 1 ? "s" : ""}</span>`;
     }
 
     return `
-      <article class="product-card ${isOutOfStock ? "is-out-of-stock" : ""}" data-product-id="${p.id}">
-        <div class="product-image" data-quick-view="${p.id}" style="cursor: pointer;">
+      <article class="product-card ${isOutOfStock ? "is-out-of-stock" : ""}" data-product-id="${escapeHtml(p.id)}">
+        <div class="product-image" data-quick-view="${escapeHtml(p.id)}" style="cursor: pointer;">
           ${badgeHtml}
-          <button class="favorite-btn ${isFav ? "liked" : ""}" data-favorite-id="${p.id}" aria-label="Ajouter ${p.name} aux favoris">
+          <button class="favorite-btn ${isFav ? "liked" : ""}" data-favorite-id="${escapeHtml(p.id)}" aria-label="Ajouter ${escapeHtml(p.name)} aux favoris">
             ${isFav ? "♥" : "♡"}
           </button>
-          <img src="${imgSrc}" alt="${p.name}" data-quick-view="${p.id}" loading="lazy" onerror="this.onerror=null;this.src='assets/fashion.jpg';" />
-          <button class="quick-view-btn" data-quick-view="${p.id}">Aperçu rapide</button>
+          <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(p.name)}" data-quick-view="${escapeHtml(p.id)}" loading="lazy" onerror="this.onerror=null;this.src='assets/fashion.jpg';" />
+          <button class="quick-view-btn" data-quick-view="${escapeHtml(p.id)}">Aperçu rapide</button>
         </div>
         <div class="product-info">
           <div class="product-meta">
-            <small class="product-cat">${p.category} · ${p.subCategory}</small>
+            <small class="product-cat">${escapeHtml(p.category)} · ${escapeHtml(p.subCategory)}</small>
             <div class="rating-badge" title="${p.rating}/5 (${p.reviewsCount} avis)">
               <span>★</span> ${p.rating}
             </div>
           </div>
-          <h3 class="product-title" data-quick-view="${p.id}">${p.name}</h3>
-          <p class="product-type">${p.type || ""}</p>
+          <h3 class="product-title" data-quick-view="${escapeHtml(p.id)}">${escapeHtml(p.name)}</h3>
+          <p class="product-type">${escapeHtml(p.type || "")}</p>
           <div class="product-bottom">
             <span class="price">${money(p.price)}</span>
             ${isOutOfStock 
               ? `<button class="add-btn out-of-stock-btn" disabled title="Article actuellement indisponible">🚫 Épuisé</button>` 
-              : `<button class="add-btn" data-add-id="${p.id}" aria-label="Ajouter ${p.name} au panier" title="Ajouter au panier">+</button>`
+              : `<button class="add-btn" data-add-id="${escapeHtml(p.id)}" aria-label="Ajouter ${escapeHtml(p.name)} au panier" title="Ajouter au panier">+</button>`
             }
           </div>
         </div>
@@ -786,12 +796,12 @@ function updateCartDrawer() {
 
   cartItemsContainer.innerHTML = cart.map((item, index) => `
     <div class="cart-row">
-      <img src="${item.image}" alt="${item.name}" onerror="this.onerror=null;this.src='assets/fashion.jpg';" />
+      <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" onerror="this.onerror=null;this.src='assets/fashion.jpg';" />
       <div class="cart-row-info">
         <button class="cart-remove-btn" data-cart-remove="${index}" title="Supprimer">×</button>
-        <strong class="cart-item-name">${item.name}</strong>
-        <span class="cart-item-cat">${item.category} · ${item.subCategory}</span>
-        ${item.selectedOption ? `<span class="cart-item-opt">Option : ${item.selectedOption}</span>` : ""}
+        <strong class="cart-item-name">${escapeHtml(item.name)}</strong>
+        <span class="cart-item-cat">${escapeHtml(item.category)} · ${escapeHtml(item.subCategory)}</span>
+        ${item.selectedOption ? `<span class="cart-item-opt">Option : ${escapeHtml(item.selectedOption)}</span>` : ""}
         <div class="cart-qty-price-row">
           <div class="quantity-controller">
             <button class="qty-btn" data-qty-change="-1" data-cart-index="${index}">-</button>
@@ -889,27 +899,27 @@ function openProductModal(id) {
   modalBody.innerHTML = `
     <div class="product-modal-grid">
       <div class="modal-gallery">
-        ${prod.tag ? `<span class="tag">${prod.tag}</span>` : ""}
-        <img src="${prod.image}" alt="${prod.name}" onerror="this.onerror=null;this.src='assets/fashion.jpg';" />
+        ${prod.tag ? `<span class="tag">${escapeHtml(prod.tag)}</span>` : ""}
+        <img src="${escapeHtml(prod.image)}" alt="${escapeHtml(prod.name)}" onerror="this.onerror=null;this.src='assets/fashion.jpg';" />
       </div>
 
       <div class="modal-details">
-        <p class="modal-category">${prod.category} ✦ ${prod.subCategory}</p>
-        <h2 class="modal-title">${prod.name}</h2>
+        <p class="modal-category">${escapeHtml(prod.category)} ✦ ${escapeHtml(prod.subCategory)}</p>
+        <h2 class="modal-title">${escapeHtml(prod.name)}</h2>
         <div class="modal-rating">
           <span class="stars">★★★★★</span>
           <strong>${prod.rating} / 5</strong>
           <small>(${prod.reviewsCount} avis vérifiés)</small>
         </div>
         <p class="modal-price">${money(prod.price)}</p>
-        <p class="modal-desc">${prod.description}</p>
+        <p class="modal-desc">${escapeHtml(prod.description)}</p>
 
         ${prod.options && prod.options.length ? `
           <div class="modal-options-block">
             <label class="modal-label">Choisir une déclinaison :</label>
             <div class="modal-options-pills" id="modalOptionsPills">
               ${prod.options.map((opt, i) => `
-                <button class="opt-pill ${i === 0 ? "active" : ""}" data-opt="${opt}">${opt}</button>
+                <button class="opt-pill ${i === 0 ? "active" : ""}" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</button>
               `).join("")}
             </div>
           </div>
@@ -971,7 +981,7 @@ function openProductModal(id) {
         ${prod.details ? `
           <div class="modal-accordion">
             <div class="modal-accordion-title">Détails & Conseils de conservation / entretien</div>
-            <div class="modal-accordion-text">${prod.details}</div>
+            <div class="modal-accordion-text">${escapeHtml(prod.details)}</div>
           </div>
         ` : ""}
       </div>
@@ -1822,11 +1832,11 @@ function renderCheckoutPage() {
             <div class="summary-items-list">
               ${cart.map(item => `
                 <div class="summary-item-row">
-                  <img src="${item.image}" alt="${item.name}" onerror="this.onerror=null;this.src='assets/fashion.jpg';" />
+                  <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" onerror="this.onerror=null;this.src='assets/fashion.jpg';" />
                   <div class="summary-item-info">
-                    <strong>${item.name}</strong>
-                    <small>${item.category} · Qte: ${item.quantity}</small>
-                    ${item.selectedOption ? `<small>Option : ${item.selectedOption}</small>` : ""}
+                    <strong>${escapeHtml(item.name)}</strong>
+                    <small>${escapeHtml(item.category)} · Qte: ${item.quantity}</small>
+                    ${item.selectedOption ? `<small>Option : ${escapeHtml(item.selectedOption)}</small>` : ""}
                   </div>
                   <span class="summary-item-price">${money(item.price * item.quantity)}</span>
                 </div>
@@ -2004,7 +2014,7 @@ function initSearch() {
     if (!matches.length) {
       searchResults.innerHTML = `
         <div class="search-no-results">
-          <p>Aucun produit ne correspond à <strong>"${query}"</strong>.</p>
+          <p>Aucun produit ne correspond à <strong>"${escapeHtml(query)}"</strong>.</p>
           <small>Essayez avec : "parfum", "sac", "jean", "pinceaux", "chaussures"...</small>
         </div>
       `;
@@ -2015,14 +2025,14 @@ function initSearch() {
       <p class="search-count-header">${matches.length} résultat${matches.length > 1 ? "s" : ""} trouvé${matches.length > 1 ? "s" : ""}</p>
       <div class="search-results-grid">
         ${matches.map(p => `
-          <div class="search-result-card" data-search-id="${p.id}">
-            <img src="${p.image}" alt="${p.name}" onerror="this.onerror=null;this.src='assets/fashion.jpg';" />
+          <div class="search-result-card" data-search-id="${escapeHtml(p.id)}">
+            <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" onerror="this.onerror=null;this.src='assets/fashion.jpg';" />
             <div class="search-res-info">
-              <small>${p.category} · ${p.subCategory}</small>
-              <strong>${p.name}</strong>
+              <small>${escapeHtml(p.category)} · ${escapeHtml(p.subCategory)}</small>
+              <strong>${escapeHtml(p.name)}</strong>
               <span>${money(p.price)}</span>
             </div>
-            <button class="btn-sm btn-dark" data-search-add="${p.id}">Ajouter</button>
+            <button class="btn-sm btn-dark" data-search-add="${escapeHtml(p.id)}">Ajouter</button>
           </div>
         `).join("")}
       </div>
@@ -2089,7 +2099,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await syncWhatsAppNumber();
 
   // Charger le catalogue initial depuis l'API
-  products = await loadProductsFromAPI();
+  products = (await loadProductsFromAPI()) || [];
 
   // Si l'utilisateur clique sur le lien d'un produit depuis WhatsApp (?produit=ID), ouvrir directement sa photo/fiche
   checkUrlForProductModal();
@@ -2102,7 +2112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       // 2. Synchroniser les stocks et pièces du catalogue
       const fresh = await loadProductsFromAPI();
-      if (!Array.isArray(fresh) || fresh.length === 0) return;
+      if (!Array.isArray(fresh)) return;
 
       const currentSig = products.map(p => `${p.id}:${p.stock}:${p.price}`).join("|");
       const freshSig = fresh.map(p => `${p.id}:${p.stock}:${p.price}`).join("|");

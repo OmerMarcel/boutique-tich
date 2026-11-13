@@ -237,7 +237,8 @@ const db = {
       let q = _supabase.from("products").select("*").order("created_at", { ascending: false });
       if (category && category !== "Tous") q = q.eq("category", category);
       if (subCategory && !subCategory.startsWith("Tous")) q = q.eq("subcategory", subCategory);
-      if (search) q = q.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
+      const safeSearch = String(search || "").replace(/[^\p{L}\p{N}\s-]/gu, "").trim().slice(0, 100);
+      if (safeSearch) q = q.or(`name.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%`);
 
       const { data, error } = await q;
       if (error) throw error;
