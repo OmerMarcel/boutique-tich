@@ -1,0 +1,14 @@
+{
+  "name": "tich-atelier-workspace",
+  "version": "1.0.0",
+  "description": "Tich Atelier — Architecture 3 modules séparés (Client, Admin, Backend)",
+  "scripts": {
+    "dev:backend": "node backend/server.js",
+    "dev:client": "node client/server.js",
+    "dev:admin": "node admin/server.js",
+    "start": "node backend/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

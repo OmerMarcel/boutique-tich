@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0e0e10" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Tich Atelier — Parfums, Beauté & Mode</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=8" />
+  </head>
+  <body>
+    <!-- Bandeau d'annonce -->
+    <div class="announcement">
+      <span>✦</span> Livraison offerte dès 50 000 FCFA d'achat <span>✦</span> Une attention parfumée dans chaque commande <span>✦</span> Retours gratuits sous 30 jours
+    </div>
+
+    <!-- En-tête du site -->
+    <header class="site-header" id="siteHeader">
+      <a class="brand" href="#accueil" aria-label="Tich Atelier accueil">
+        <span class="brand-mark">✦</span>
+        <span><strong>Tich</strong><small>ATELIER</small></span>
+      </a>
+
+      <!-- Navigation Desktop -->
+      <nav class="desktop-nav" aria-label="Navigation principale">
+        <a href="#accueil" data-route="home">Accueil</a>
+        
+        <!-- Menu déroulant Boutique avec sous-catégories -->
+        <div class="nav-dropdown-wrapper">
+          <a href="#boutique" data-route="shop" class="nav-dropdown-trigger">
+            Boutique <span class="chevron-down">▾</span>
+          </a>
+          <div class="mega-dropdown">
+            <div class="mega-column">
+              <a href="#boutique?cat=parfums" class="mega-title">
+                <span class="mega-icon">🌸</span> Boutique Parfums
+              </a>
+              <a href="#boutique?cat=parfums&sub=eaux" class="mega-sub">Eaux de parfum</a>
+              <a href="#boutique?cat=parfums&sub=brumes" class="mega-sub">Brumes parfumées</a>
+              <a href="#boutique?cat=parfums&sub=coffrets" class="mega-sub">Coffrets & Rituels</a>
+            </div>
+
+            <div class="mega-column">
+              <a href="#boutique?cat=beaute" class="mega-title">
+                <span class="mega-icon">✨</span> Accessoires de Beauté
+              </a>
+              <a href="#boutique?cat=beaute&sub=accessoires" class="mega-sub">Accessoires & Outils</a>
+              <a href="#boutique?cat=beaute&sub=pinceaux" class="mega-sub">Pinceaux & Trousses</a>
+              <a href="#boutique?cat=beaute&sub=soins" class="mega-sub">Soins & Sérums visage</a>
+            </div>
+
+            <div class="mega-column">
+              <a href="#boutique?cat=mode" class="mega-title">
+                <span class="mega-icon">👗</span> Boutique de Mode
+              </a>
+              <a href="#boutique?cat=mode&sub=sacs" class="mega-sub">👜 Sacs & Maroquinerie</a>
+              <a href="#boutique?cat=mode&sub=chaussures" class="mega-sub">👠 Chaussures & Sandales</a>
+              <a href="#boutique?cat=mode&sub=tshirts" class="mega-sub">👕 Tee-shirts & Tops</a>
+              <a href="#boutique?cat=mode&sub=jeans" class="mega-sub">👖 Jeans & Denims</a>
+              <a href="#boutique?cat=mode&sub=robes" class="mega-sub">👗 Robes & Blazers</a>
+            </div>
+
+            <div class="mega-featured">
+              <div class="mega-card">
+                <img src="assets/1.png" alt="Collection Mode & Accessoires" />
+                <div class="mega-card-info">
+                  <span class="tag-sm">NOUVEAUTÉS</span>
+                  <h4>La Capsule Solaire</h4>
+                  <p>Sacs en cuir, chaussures & tee-shirts d'été</p>
+                  <a href="#boutique?cat=mode" class="text-link-sm">Découvrir <span>→</span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="#collections" data-route="collections">Collections</a>
+        <a href="#histoire" data-route="story">Notre histoire</a>
+        <a href="#contact" data-route="contact">Contact</a>
+        <a href="#faq" data-route="faq">FAQ</a>
+      </nav>
+
+      <!-- Actions de l'en-tête -->
+      <div class="header-actions">
+        <button class="icon-btn search-toggle" aria-label="Rechercher un produit" id="searchToggle" title="Rechercher">⌕</button>
+        <a href="#favoris" class="icon-btn favorites-btn" aria-label="Mes favoris" id="favoritesBtn" title="Mes favoris">
+          ♡<span class="counter-badge" id="favoritesCount">0</span>
+        </a>
+        <button class="bag-btn" id="openCart" aria-label="Ouvrir le panier" title="Mon panier">
+          <svg class="bag-icon-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block; vertical-align:middle;">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span id="cartCount">0</span>
+        </button>
+        <button class="menu-btn" id="menuToggle" aria-label="Ouvrir le menu">☰</button>
+      </div>
+    </header>
+
+    <!-- Navigation Mobile Drawer -->
+    <div class="mobile-nav" id="mobileNav">
+      <div class="mobile-nav-header">
+        <span class="brand">
+          <span class="brand-mark">✦</span>
+          <span><strong>Tich</strong><small>ATELIER</small></span>
+        </span>
+        <button class="close-mobile-nav" id="closeMobileNav" aria-label="Fermer le menu">×</button>
+      </div>
+
+      <div class="mobile-nav-links">
+        <a href="#accueil" class="mobile-nav-item" data-route="home">Accueil</a>
+
+        <!-- Accordéon Boutique Mobile -->
+        <div class="mobile-accordion">
+          <button class="mobile-accordion-btn" id="mobileShopToggle">
+            <span>Boutique</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="mobile-accordion-content" id="mobileShopContent">
+            <a href="#boutique" class="mobile-sublink highlight">✦ Voir toute la boutique</a>
+            
+            <div class="mobile-cat-group">
+              <span class="mobile-cat-title">🌸 Parfums</span>
+              <a href="#boutique?cat=parfums" class="mobile-sublink">Tous les parfums</a>
+              <a href="#boutique?cat=parfums&sub=eaux" class="mobile-sublink">Eaux de parfum</a>
+              <a href="#boutique?cat=parfums&sub=brumes" class="mobile-sublink">Brumes parfumées</a>
+            </div>
+
+            <div class="mobile-cat-group">
+              <span class="mobile-cat-title">✨ Accessoires de Beauté</span>
+              <a href="#boutique?cat=beaute" class="mobile-sublink">Tous les accessoires & soins</a>
+              <a href="#boutique?cat=beaute&sub=accessoires" class="mobile-sublink">Accessoires de beauté & outils</a>
+              <a href="#boutique?cat=beaute&sub=soins" class="mobile-sublink">Soins & Sérums visage</a>
+            </div>
+
+            <div class="mobile-cat-group">
+              <span class="mobile-cat-title">👗 Boutique de Mode</span>
+              <a href="#boutique?cat=mode" class="mobile-sublink">Toute la mode</a>
+              <a href="#boutique?cat=mode&sub=sacs" class="mobile-sublink">👜 Sacs & Maroquinerie</a>
+              <a href="#boutique?cat=mode&sub=chaussures" class="mobile-sublink">👠 Chaussures & Sandales</a>
+              <a href="#boutique?cat=mode&sub=tshirts" class="mobile-sublink">👕 Tee-shirts & Tops</a>
+              <a href="#boutique?cat=mode&sub=jeans" class="mobile-sublink">👖 Jeans & Denims</a>
+              <a href="#boutique?cat=mode&sub=robes" class="mobile-sublink">👗 Robes & Blazers</a>
+            </div>
+          </div>
+        </div>
+
+        <a href="#collections" class="mobile-nav-item" data-route="collections">Collections</a>
+        <a href="#histoire" class="mobile-nav-item" data-route="story">Notre histoire</a>
+        <a href="#contact" class="mobile-nav-item" data-route="contact">Contact</a>
+        <a href="#faq" class="mobile-nav-item" data-route="faq">FAQ</a>
+        <a href="#favoris" class="mobile-nav-item" data-route="favorites">Mes Favoris (<span id="mobileFavCount">0</span>)</a>
+      </div>
+    </div>
+
+    <!-- Conteneur principal (Home View) -->
+    <main id="homeMain">
+      <!-- Section Héro -->
+      <section class="hero" id="accueil">
+        <div class="hero-copy">
+          <p class="eyebrow">L'art de se révéler</p>
+          <h1>Votre signature.<br /><em>Votre lumière.</em></h1>
+          <p class="hero-text">
+            Des parfums singuliers, des accessoires de beauté raffinés et des pièces de mode essentielles conçues pour sublimer votre quotidien.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-dark" href="#boutique">Explorer la Boutique <span>→</span></a>
+            <a class="text-link" href="#collections">Découvrir les univers</a>
+          </div>
+          <div class="hero-note">
+            <span class="avatar-stack"><i>✦</i><i>✧</i><i>♡</i></span>
+            <span><strong>4.9 / 5</strong><br /><small>+2 500 clientes conquises</small></span>
+          </div>
+        </div>
+        <div class="hero-art">
+          <div class="hero-orb"></div>
+          <video id="heroPerfumeVideo" autoplay loop muted playsinline preload="auto" poster="assets/perfume.jpg" onloadedmetadata="this.playbackRate = 0.3;">
+            <source src="assets/Woman_reaching_for_perfume_bottle_8f5921ba.mp4" type="video/mp4" />
+          </video>
+          <div class="floating-card">
+            <span>NOTES DU MOMENT</span>
+            <strong>Velvet Noir</strong>
+            <small>Orchidée noire · Vanille bourbon · Patchouli</small>
+            <a href="#boutique?cat=parfums" class="floating-card-link">Voir la fragrance <span>→</span></a>
+          </div>
+          <div class="sparkle s1">✦</div>
+          <div class="sparkle s2">✧</div>
+        </div>
+      </section>
+
+      <!-- Barre de réassurance / Confiance -->
+      <section class="trust-bar">
+        <a href="#histoire" class="trust-item">
+          <span>✧</span>
+          <div>
+            <strong>100% Authentique</strong>
+            <small>Formules & matières nobles</small>
+          </div>
+        </a>
+        <div class="trust-item">
+          <span>♧</span>
+          <div>
+            <strong>Livraison Offerte dès 50 000 FCFA</strong>
+            <small>Expédiée sous 24 à 48h</small>
+          </div>
+        </div>
+        <div class="trust-item">
+          <span>↻</span>
+          <div>
+            <strong>Retours Gratuits 30j</strong>
+            <small>Simples et sans tracas</small>
+          </div>
+        </div>
+        <a href="#contact" class="trust-item">
+          <span>♡</span>
+          <div>
+            <strong>Conseils Personnalisés</strong>
+            <small>Une équipe à votre écoute</small>
+          </div>
+        </a>
+      </section>
+
+      <!-- Section Univers & Boutiques (Collections) -->
+      <section class="section" id="collections">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Les 3 univers Tich</p>
+            <h2>Choisissez votre <em>boutique</em></h2>
+          </div>
+          <a class="text-link" href="#boutique">Voir tout le catalogue <span>→</span></a>
+        </div>
+
+        <div class="category-grid">
+          <!-- Carte Boutique Parfums -->
+          <a class="category category-large" href="#boutique?cat=parfums">
+            <img src="assets/parfum.png" alt="Boutique de Parfums" />
+            <div class="category-content">
+              <span>01 · BOUTIQUE</span>
+              <h3>Parfums</h3>
+              <p>Eaux de parfum d'exception & brumes célestes</p>
+              <div class="cat-pill-row">
+                <span class="pill">Eaux de parfum</span>
+                <span class="pill">Brumes</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Carte Boutique Beauté & Accessoires -->
+          <a class="category category-large" href="#boutique?cat=beaute">
+            <img src="assets/accessoires.png" alt="Boutique Accessoires de Beauté" />
+            <div class="category-content">
+              <span>02 · BOUTIQUE</span>
+              <h3>Accessoires de Beauté</h3>
+              <p>Pinceaux soyeux, rituels quartz & soins éclat</p>
+              <div class="cat-pill-row">
+                <span class="pill">Pinceaux</span>
+                <span class="pill">Outils Gua Sha</span>
+                <span class="pill">Soins</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Carte Boutique Mode (Sacs, Chaussures, Tee-shirts, Jeans) -->
+          <a class="category category-large" href="#boutique?cat=mode">
+            <img src="assets/mode.png" alt="Boutique de Mode" />
+            <div class="category-content">
+              <span>03 · BOUTIQUE</span>
+              <h3>Mode & Style</h3>
+              <p>Sacs en cuir, chaussures, tee-shirts & jeans parfaits</p>
+              <div class="cat-pill-row">
+                <span class="pill">Sacs</span>
+                <span class="pill">Chaussures</span>
+                <span class="pill">Tee-shirts</span>
+                <span class="pill">Jeans</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Section Boutique Interactive sur l'accueil -->
+      <section class="shop-section" id="boutique">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Le vestiaire & les rituels</p>
+            <h2>La sélection <em>Tich Atelier</em></h2>
+          </div>
+          <div class="shop-heading-actions">
+            <a href="#boutique" class="btn btn-outline-sm">Ouvrir la Boutique Complète <span>→</span></a>
+          </div>
+        </div>
+
+        <!-- Filtres Principaux par Boutique -->
+        <div class="boutique-nav-container">
+          <div class="filter-tabs main-tabs" role="tablist" id="homeMainTabs">
+            <button class="selected" data-main-filter="Tous">✦ Tout</button>
+            <button data-main-filter="Parfums">🌸 Boutique Parfums</button>
+            <button data-main-filter="Beauté">✨ Accessoires de Beauté</button>
+            <button data-main-filter="Mode">👗 Boutique de Mode</button>
+          </div>
+
+          <!-- Sous-catégories dynamiques -->
+          <div class="sub-filter-bar" id="homeSubFilterBar">
+            <span class="sub-filter-label">Sous-catégories :</span>
+            <div class="sub-filter-chips" id="homeSubChips">
+              <!-- Rempli dynamiquement en JS selon la boutique sélectionnée -->
+            </div>
+          </div>
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+
+      <!-- Section Histoire sur la page d'accueil -->
+      <section class="story" id="histoire">
+        <div class="story-image">
+          <img src="assets/2.png" alt="Univers de création Tich Atelier" />
+        </div>
+        <div class="story-copy">
+          <p class="eyebrow">Tich Atelier — Paris, depuis 2018</p>
+          <h2>Plus qu'une boutique,<br /><em>un état d'esprit.</em></h2>
+          <p>
+            Nous croyons aux objets qui réconfortent, aux fragrances qui réveillent une mémoire intime et aux pièces de mode bien taillées qui boostent la confiance.
+          </p>
+          <p>
+            Du cuir de nos sacs aux flacons précieux de nos parfums, chaque création est rigoureusement sélectionnée pour vous accompagner dans le temps.
+          </p>
+          <div class="story-actions">
+            <a class="btn btn-dark" href="#histoire">Lire notre histoire <span>→</span></a>
+            <a class="text-link" href="#boutique">Explorer le catalogue</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Vue dynamique pour les pages intérieures (Boutique complète, Collections, Contact, Histoire, Livraison, FAQ, Favoris, Compte, Checkout) -->
+    <div id="pageView" class="page-view" hidden></div>
+
+    <!-- Pied de page -->
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="#accueil">
+            <span class="brand-mark">✦</span>
+            <span><strong>Tich</strong><small>ATELIER</small></span>
+          </a>
+          <p class="footer-tagline">L'art de la délicatesse, des parfums rares et du vestiaire intemporel.</p>
+          <div class="footer-socials">
+            <span>Instagram · Pinterest · TikTok</span>
+          </div>
+        </div>
+
+        <!-- Univers Boutique -->
+        <div class="footer-col">
+          <h4>Boutique en Ligne</h4>
+          <a href="#boutique?cat=parfums">Boutique Parfums</a>
+          <a href="#boutique?cat=beaute">Accessoires de Beauté</a>
+          <a href="#boutique?cat=mode&sub=sacs">Sacs & Maroquinerie</a>
+          <a href="#boutique?cat=mode&sub=chaussures">Chaussures & Sandales</a>
+          <a href="#boutique?cat=mode&sub=tshirts">Tee-shirts & Tops</a>
+          <a href="#boutique?cat=mode&sub=jeans">Jeans & Pantalons</a>
+          <a href="#boutique?cat=mode&sub=robes">Robes & Blazers</a>
+        </div>
+
+        <!-- Service client & Liens utiles -->
+        <div class="footer-col">
+          <h4>Maison & Service</h4>
+          <a href="#collections">Nos Collections</a>
+          <a href="#histoire">Notre Histoire</a>
+          <a href="#contact">Contactez-nous</a>
+          <a href="#faq">Foire aux Questions (FAQ)</a>
+          <a href="#favoris">Mes Favoris</a>
+          <a href="#compte">Mon Compte</a>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="footer-col newsletter-col">
+          <h4>Le Journal Tich</h4>
+          <p>Recevez en avant-première nos lancements exclusifs et profitez de -10% sur votre première commande.</p>
+          <form id="newsletterForm" class="newsletter-form">
+            <input type="email" id="newsletterEmail" placeholder="Votre adresse email..." aria-label="Votre adresse email" required />
+            <button type="submit" aria-label="S'inscrire à la newsletter">→</button>
+          </form>
+          <small class="newsletter-privacy">✦ Vos données restent confidentielles et protégées.</small>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Tich Atelier. Tous droits réservés.</p>
+        <div class="footer-bottom-links">
+          <a href="#faq">Mentions légales</a>
+          <a href="#faq">Politique de confidentialité</a>
+          <a href="#faq">Conditions Générales de Vente (CGV)</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Panier tiroir (Drawer) -->
+    <aside class="cart-drawer" id="cartDrawer" aria-label="Votre sac de shopping">
+      <div class="drawer-header">
+        <div>
+          <h2>Votre sac</h2>
+          <p class="drawer-subtitle" id="drawerItemCount">0 article</p>
+        </div>
+        <button id="closeCart" class="close-drawer" aria-label="Fermer le panier">×</button>
+      </div>
+
+      <!-- Barre de progression pour la livraison gratuite (50 000 FCFA) -->
+      <div class="free-shipping-progress" id="freeShippingWidget">
+        <div class="shipping-text" id="freeShippingText">Livraison offerte dès 50 000 FCFA d'achat</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="shippingProgressBar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Liste des articles -->
+      <div id="cartItems" class="cart-items"></div>
+
+      <!-- Pied du tiroir avec sous-total et code promo -->
+      <div class="cart-footer">
+        <div class="promo-box">
+          <input type="text" id="promoInput" placeholder="Code promo (ex: TICH10)" />
+          <button id="applyPromoBtn">Appliquer</button>
+        </div>
+        <div id="promoMessage" class="promo-feedback"></div>
+
+        <div class="cart-totals-breakdown">
+          <div class="calc-row">
+            <span>Sous-total</span>
+            <strong id="cartSubtotal">0 FCFA</strong>
+          </div>
+          <div class="calc-row" id="discountRow" style="display: none;">
+            <span>Réduction (<span id="discountTag">TICH10</span>)</span>
+            <strong id="cartDiscount" class="text-green">-0 FCFA</strong>
+          </div>
+          <div class="calc-row">
+            <span>Livraison</span>
+            <strong id="cartShipping">0 FCFA</strong>
+          </div>
+          <div class="calc-row total-row">
+            <span>Total indicatif</span>
+            <strong id="cartTotal">0 FCFA</strong>
+          </div>
+        </div>
+
+        <div class="cart-action-buttons">
+          <button class="btn btn-whatsapp btn-block" id="proceedWhatsAppBtn">
+            <span class="wa-icon">💬</span> Commander directement sur WhatsApp <span>→</span>
+          </button>
+        </div>
+        <p class="secure-checkout-badge">✦ Aucun formulaire à remplir · Nous convenons ensemble du lieu de livraison, du prix et du paiement sur WhatsApp.</p>
+      </div>
+    </aside>
+
+    <!-- Modale Aperçu Rapide / Fiche Produit (Quick View) -->
+    <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-dialog">
+        <button class="close-modal" id="closeProductModal" aria-label="Fermer">×</button>
+        <div class="modal-body" id="productModalBody">
+          <!-- Rempli dynamiquement en JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Modale de Recherche Instantanée -->
+    <div class="search-panel" id="searchPanel" hidden>
+      <div class="search-box">
+        <button class="close-search" id="closeSearchPanel" aria-label="Fermer la recherche">×</button>
+        <p class="eyebrow">Recherche Tich Atelier</p>
+        <h2>Trouvez votre <em>pièce idéale</em></h2>
+        <div class="search-input-wrapper">
+          <span class="search-icon">⌕</span>
+          <input id="searchInput" type="text" placeholder="Parfum, sac en cuir, jean flare, pinceaux, tee-shirt..." aria-label="Recherche de produit" autocomplete="off" />
+        </div>
+        
+        <div class="search-quick-tags">
+          <span>Suggestions :</span>
+          <button class="tag-btn" data-search-tag="Sacs">Sacs</button>
+          <button class="tag-btn" data-search-tag="Chaussures">Chaussures</button>
+          <button class="tag-btn" data-search-tag="Tee-shirts">Tee-shirts</button>
+          <button class="tag-btn" data-search-tag="Jeans">Jeans</button>
+          <button class="tag-btn" data-search-tag="Parfum">Parfums</button>
+          <button class="tag-btn" data-search-tag="Pinceaux">Accessoires beauté</button>
+        </div>
+
+        <div id="searchResults" class="search-results-container"></div>
+      </div>
+    </div>
+
+    <!-- Bouton flottant WhatsApp -->
+    <a href="#" class="floating-whatsapp" id="floatingWhatsApp" target="_blank" rel="noopener noreferrer" aria-label="Commander ou discuter sur WhatsApp" title="Commander sur WhatsApp">
+      <svg class="wa-svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.55C9.33 7.55 9.01 7.62 8.74 7.92C8.47 8.22 7.71 8.93 7.71 10.37C7.71 11.81 8.76 13.2 8.91 13.39C9.06 13.59 10.96 16.52 13.87 17.77C14.56 18.07 15.1 18.25 15.52 18.38C16.21 18.6 16.84 18.57 17.34 18.5C17.9 18.41 19.06 17.79 19.3 17.11C19.54 16.43 19.54 15.86 19.47 15.74C19.4 15.62 19.23 15.55 18.96 15.42C18.7 15.28 17.38 14.63 17.13 14.54C16.88 14.45 16.71 14.41 16.53 14.68C16.36 14.94 15.85 15.55 15.7 15.73C15.54 15.9 15.39 15.92 15.13 15.79C14.86 15.65 14.02 15.38 13.02 14.49C12.24 13.79 11.72 12.93 11.57 12.67C11.41 12.41 11.55 12.27 11.69 12.14C11.81 12.02 11.96 11.83 12.09 11.68C12.23 11.53 12.28 11.42 12.37 11.23C12.46 11.04 12.41 10.89 12.34 10.75C12.28 10.61 11.75 9.32 11.53 8.79C11.31 8.27 11.1 8.35 10.93 8.34C10.78 8.34 10.61 8.33 10.43 8.33C10.26 8.33 9.98 8.4 9.76 8.64C9.53 8.87 8.91 9.46 8.91 10.66C8.91 11.86 9.78 13.02 9.9 13.18"/>
+      </svg>
+      <span class="wa-tooltip">Commander sur WhatsApp</span>
+    </a>
+
+    <!-- Overlay sombre pour tiroir et modales -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- Script principal -->
+    <script src="script.js?v=9"></script>
+  </body>
+</html>

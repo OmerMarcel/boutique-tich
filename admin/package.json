@@ -1,0 +1,14 @@
+{
+  "name": "tich-atelier-admin",
+  "version": "1.0.0",
+  "description": "Tich Atelier — Backoffice Administrateur",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
+

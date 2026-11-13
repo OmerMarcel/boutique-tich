@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Tich Atelier — Backoffice Administrateur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css?v=8" />
+</head>
+<body>
+
+  <!-- Page de Login -->
+  <div id="login-page" style="display:flex; min-height:100vh; align-items:center; justify-content:center; background:#0a0a0a; padding: 16px; box-sizing: border-box;">
+    <div style="background:#111; border:1px solid #c9a96e; border-radius:16px; padding:36px 22px; width:100%; max-width:380px; text-align:center; box-sizing:border-box;">
+      <div style="color:#c9a96e; font-size:13px; letter-spacing:4px; margin-bottom:8px;">TICH ATELIER</div>
+      <h2 style="color:#fff; font-size:22px; margin:0 0 32px; font-weight:400;">Administration</h2>
+      <div id="login-error" style="display:none; background:#c0392b22; color:#e74c3c; border:1px solid #c0392b55; border-radius:8px; padding:12px; margin-bottom:20px; font-size:14px;"></div>
+      <form id="login-form">
+        <input type="text" id="login-username" placeholder="Identifiant" autocomplete="username"
+          style="width:100%; padding:12px 16px; background:#1a1a1a; border:1px solid #333; border-radius:8px; color:#fff; font-size:15px; margin-bottom:12px; box-sizing:border-box; outline:none;" required>
+        <input type="password" id="login-password" placeholder="Mot de passe" autocomplete="current-password"
+          style="width:100%; padding:12px 16px; background:#1a1a1a; border:1px solid #333; border-radius:8px; color:#fff; font-size:15px; margin-bottom:20px; box-sizing:border-box; outline:none;" required>
+        <button type="submit" id="login-btn"
+          style="width:100%; padding:14px; background:#c9a96e; border:none; border-radius:8px; color:#0a0a0a; font-size:15px; font-weight:600; letter-spacing:1px; cursor:pointer;">
+          SE CONNECTER
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div id="admin-app" style="display:none;">
+
+  <!-- Topbar Backoffice -->
+  <header class="adm-topbar">
+    <div class="adm-brand">
+      <a href="index.html" class="adm-logo">TICH ATELIER</a>
+      <span class="adm-badge-role">Backoffice</span>
+      <div class="adm-sync-status" title="Les modifications se reflètent instantanément sur la boutique client">
+        <span class="pulse-dot"></span>
+        <span>Catalogue Connecté en Direct</span>
+      </div>
+    </div>
+
+    <div class="adm-topbar-actions">
+      <a id="admClientStoreLink" href="http://localhost:3000" target="_blank" class="adm-btn adm-btn-gold" title="Ouvrir la boutique client dans un nouvel onglet">
+        <span>👁️</span> Voir la Boutique Client ↗
+      </a>
+      <button class="adm-btn adm-btn-light" id="admWaConfigBtn" title="Modifier le numéro WhatsApp qui reçoit les commandes">
+        <span>📱</span> Numéro WhatsApp
+      </button>
+      <button id="btn-logout" style="background:transparent; border:1px solid #555; color:#ccc; padding:8px 16px; border-radius:6px; cursor:pointer; font-size:13px; margin-left:12px;">Déconnexion</button>
+    </div>
+  </header>
+
+  <!-- Contenu Principal -->
+  <main class="adm-container">
+
+    <!-- En-tête de page -->
+    <div class="adm-page-header">
+      <div>
+        <span class="adm-eyebrow">⚙️ Espace Administrateur Privé</span>
+        <h1>Gestion des Stocks & Catalogue</h1>
+        <p>Ajustez vos disponibilités en temps réel et publiez de nouvelles pièces directement sur le site client.</p>
+      </div>
+      <div>
+        <button class="adm-btn adm-btn-primary" id="admAddNewBtn" style="padding: 12px 22px; font-size: 14.5px;">
+          <span>+</span> Ajouter un Produit au Catalogue
+        </button>
+      </div>
+    </div>
+
+    <!-- Grille des Indicateurs Clés (KPIs) -->
+    <section class="adm-kpi-grid">
+      <div class="adm-kpi-card">
+        <div class="adm-kpi-icon">📦</div>
+        <div>
+          <strong id="kpiTotalItems">0</strong>
+          <small id="kpiTotalUnits">0 unités en réserve</small>
+        </div>
+      </div>
+
+      <div class="adm-kpi-card">
+        <div class="adm-kpi-icon">💰</div>
+        <div>
+          <strong id="kpiTotalValue">0 FCFA</strong>
+          <small>Valeur marchande globale du stock</small>
+        </div>
+      </div>
+
+      <div class="adm-kpi-card" id="kpiCardLow">
+        <div class="adm-kpi-icon">⚠️</div>
+        <div>
+          <strong id="kpiLowStock">0</strong>
+          <small>Articles en stock faible (≤ 3 unités)</small>
+        </div>
+      </div>
+
+      <div class="adm-kpi-card" id="kpiCardOut">
+        <div class="adm-kpi-icon">🚫</div>
+        <div>
+          <strong id="kpiOutOfStock">0</strong>
+          <small>Articles en rupture de stock (0)</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- Barre d'outils, filtres et recherche -->
+    <div class="adm-toolbar">
+      <div class="adm-search-box">
+        <span>🔍</span>
+        <input type="text" id="admSearch" placeholder="Rechercher par nom, référence ID, univers, sous-catégorie, tag..." />
+      </div>
+
+      <div class="adm-filters-group">
+        <select id="admFilterCat">
+          <option value="Tous">Tous les univers</option>
+          <option value="Mode">👗 Boutique de Mode</option>
+          <option value="Parfums">🌸 Boutique Parfums</option>
+          <option value="Beauté">✨ Accessoires de Beauté</option>
+        </select>
+
+        <select id="admFilterStock">
+          <option value="all">Tous les états de stock</option>
+          <option value="in">✓ En stock (> 3)</option>
+          <option value="low">⚠️ Stock faible (1 à 3)</option>
+          <option value="out">🚫 En rupture (0)</option>
+        </select>
+
+        <select id="admSortBy">
+          <option value="default">Tri : Plus récents d'abord</option>
+          <option value="stock-asc">Stock : Plus faible d'abord</option>
+          <option value="stock-desc">Stock : Plus élevé d'abord</option>
+          <option value="price-asc">Prix : Croissant</option>
+          <option value="price-desc">Prix : Décroissant</option>
+          <option value="name">Nom alphabétique (A-Z)</option>
+        </select>
+
+        <span id="admResultCount" style="font-size: 12.5px; font-weight: 700; color: var(--admin-muted); display: flex; align-items: center; padding-left: 6px;">
+          25 pièces
+        </span>
+      </div>
+    </div>
+
+    <!-- Tableau de l'inventaire en direct -->
+    <div class="adm-table-card">
+      <div class="adm-table-container">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th style="width: 36%;">Pièce & Référence</th>
+              <th>Univers & Rayon</th>
+              <th>Prix unitaire</th>
+              <th>Statut Stock</th>
+              <th>Ajuster le Stock Direct</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admTableBody">
+            <!-- Rempli dynamiquement par admin.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modale : Ajouter ou Modifier un Produit -->
+  <div class="adm-modal-overlay" id="productModalOverlay" role="dialog" aria-modal="true">
+    <div class="adm-modal-dialog">
+      <div class="adm-modal-header">
+        <span class="adm-eyebrow">Catalogue & Stocks</span>
+        <h2 id="productModalTitle">Ajouter une pièce au catalogue</h2>
+        <p>Les modifications apparaîtront immédiatement sur la boutique client en ligne.</p>
+        <button class="adm-modal-close" id="closeProductModal" aria-label="Fermer">×</button>
+      </div>
+
+      <div class="adm-modal-body">
+        <form id="adminProductForm" class="adm-form">
+          <input type="hidden" id="admEditId" value="" />
+
+          <div class="adm-form-row">
+            <label>
+              Nom de la pièce *
+              <input type="text" id="admName" required placeholder="Ex: Sac Seau Cuir Carmel" />
+            </label>
+            <label>
+              Univers principal *
+              <select id="admCategory" required>
+                <option value="Mode" selected>👗 Boutique de Mode</option>
+                <option value="Parfums">🌸 Boutique Parfums</option>
+                <option value="Beauté">✨ Accessoires de Beauté</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="adm-form-row">
+            <label>
+              Sous-catégorie *
+              <select id="admSubCategory" required>
+                <!-- Rempli dynamiquement par admin.js -->
+              </select>
+            </label>
+            <label>
+              Badge / Tag (Optionnel)
+              <select id="admTag">
+                <option value="">Aucun</option>
+                <option value="NOUVEAU">NOUVEAU</option>
+                <option value="COUP DE CŒUR">COUP DE CŒUR</option>
+                <option value="BESTSELLER">BESTSELLER</option>
+                <option value="SIGNATURE">SIGNATURE</option>
+                <option value="PROMO">PROMO</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="adm-form-row">
+            <label>
+              Prix unitaire en FCFA *
+              <input type="number" id="admPrice" required min="500" step="500" placeholder="Ex: 35000" />
+            </label>
+            <label>
+              Quantité en stock initiale *
+              <input type="number" id="admStock" required min="0" value="15" placeholder="Ex: 15" />
+              <div class="adm-quick-stock-row">
+                <button type="button" class="adm-btn-quick-stock danger" id="admModalZeroStockBtn" title="Passer en rupture immédiate (0)">
+                  🚫 Rupture (0)
+                </button>
+                <button type="button" class="adm-btn-quick-stock success" id="admModalSetTenStockBtn" title="Rétablir à 10 unités">
+                  ✓ En stock (10)
+                </button>
+                <button type="button" class="adm-btn-quick-stock" id="admModalAddFiveStockBtn" title="Ajouter +5 au stock">
+                  +5
+                </button>
+              </div>
+            </label>
+          </div>
+
+          <label>
+            Type ou spécification courte
+            <input type="text" id="admType" placeholder="Ex: Maroquinerie d'art · Cuir grainé carmel" />
+          </label>
+
+          <!-- Section Photo -->
+          <div class="adm-photo-panel">
+            <label style="margin-bottom: 10px; font-weight: 700;">Visuel du produit :</label>
+            <div class="adm-photo-layout">
+              <div class="adm-photo-preview-wrap">
+                <img id="admPhotoPreview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100%' height='100%' fill='%23f1f1f1'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%23999'>TICH</text></svg>" alt="Aperçu visuel" />
+              </div>
+              <div class="adm-photo-controls">
+                <label>
+                  Option 1 : Téléverser une photo locale (PC ou mobile)
+                  <input type="file" id="admFileInput" accept="image/*" />
+                </label>
+                <label style="margin-top: 8px;">
+                  Option 2 : Lien URL web d'une image
+                  <input type="url" id="admUrlInput" placeholder="https://images.unsplash.com/..." />
+                </label>
+                <label style="margin-top: 8px;">
+                  Option 3 : Image prédéfinie boutique
+                  <select id="admPresetSelect">
+                    <option value="assets/fashion.jpg">Mode & Style (assets/fashion.jpg)</option>
+                    <option value="assets/perfume.jpg">Parfums (assets/perfume.jpg)</option>
+                    <option value="assets/beauty.jpg">Beauté & Soins (assets/beauty.jpg)</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <label>
+            Déclinaisons / Tailles / Volumes (séparées par des virgules)
+            <input type="text" id="admOptions" placeholder="Ex: 36, 37, 38, 39, 40 ou S, M, L ou 50 ml, 100 ml" />
+          </label>
+
+          <label>
+            Description détaillée
+            <textarea id="admDesc" rows="3" placeholder="Présentation de la pièce, des matières et finitions..."></textarea>
+          </label>
+
+          <div style="margin-top: 24px; display: flex; gap: 10px; justify-content: flex-end;">
+            <button type="button" class="adm-btn adm-btn-outline" id="cancelProductModalBtn">
+              Annuler
+            </button>
+            <button type="submit" class="adm-btn adm-btn-primary" id="admSubmitBtn">
+              Enregistrer et Publier sur le Site Client →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modale : Configuration WhatsApp -->
+  <div class="adm-modal-overlay" id="waModalOverlay" role="dialog" aria-modal="true">
+    <div class="adm-modal-dialog" style="max-width: 520px;">
+      <div class="adm-modal-header">
+        <span class="adm-eyebrow">Réception des Commandes</span>
+        <h2>Numéro WhatsApp Officiel</h2>
+        <p>Les clients qui passent commande sur le catalogue seront redirigés directement vers ce numéro WhatsApp avec leur panier pré-rempli.</p>
+        <button class="adm-modal-close" id="closeWaModal" aria-label="Fermer">×</button>
+      </div>
+
+      <div class="adm-modal-body">
+        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 12px;">
+          Numéro avec indicatif pays (sans le signe +) :
+          <input type="text" id="waNumberInput" placeholder="Ex: 2250700000000 ou 33612345678" style="margin-top: 8px; width: 100%; padding: 12px 14px; font-size: 15px; border: 1px solid var(--admin-border); border-radius: var(--radius-sm);" />
+        </label>
+        <small style="display: block; color: var(--admin-muted); margin-bottom: 20px; line-height: 1.5;">
+          Exemples :<br>
+          • Côte d'Ivoire : <strong>2250700000000</strong><br>
+          • Sénégal : <strong>221770000000</strong><br>
+          • France : <strong>33612345678</strong>
+        </small>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button type="button" class="adm-btn adm-btn-outline" id="cancelWaModalBtn">Annuler</button>
+          <button type="button" class="adm-btn adm-btn-primary" id="saveWaModalBtn">Enregistrer le Numéro →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de notification -->
+  <div class="adm-toast" id="admToast"></div>
+
+  <script src="admin.js?v=8"></script>
+</div>
+</body>
+</html>
+
