@@ -32,8 +32,9 @@ Pour personnaliser l'adresse de l'API (ex: API hébergée sur Render ou Supabase
 </script>
 ```
 
-Pour activer le bouton « Voir la Boutique » en production, définissez également
-`window.TICH_CLIENT_URL` avant le chargement de `admin.js`.
+Le bouton « Voir la Boutique » ouvre par défaut `https://boutique-tich.vercel.app`.
+Pour remplacer cette adresse, définissez `window.TICH_CLIENT_URL` avant le
+chargement de `admin.js`.
 
 ---
 

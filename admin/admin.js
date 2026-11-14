@@ -18,6 +18,7 @@ const BACKEND_URL = (typeof window !== "undefined" && window.TICH_BACKEND_URL) |
     : ""
 );
 const API_BASE = BACKEND_URL;
+const DEFAULT_CLIENT_URL = "https://boutique-tich.vercel.app";
 
 const DEFAULT_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100%' height='100%' fill='%23f1f1f1'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%23999'>TICH</text></svg>";
 
@@ -607,15 +608,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const clientStoreLink = document.getElementById("admClientStoreLink");
   if (clientStoreLink) {
-    const configuredClientUrl = window.TICH_CLIENT_URL;
-    if (configuredClientUrl) {
-      clientStoreLink.href = configuredClientUrl;
-    } else if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    const configuredClientUrl = window.TICH_CLIENT_URL || DEFAULT_CLIENT_URL;
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
       clientStoreLink.href = "http://localhost:3000";
     } else {
-      clientStoreLink.removeAttribute("href");
-      clientStoreLink.setAttribute("aria-disabled", "true");
-      clientStoreLink.title = "Configurez TICH_CLIENT_URL pour activer ce lien";
+      clientStoreLink.href = configuredClientUrl;
+      clientStoreLink.removeAttribute("aria-disabled");
     }
   }
 
