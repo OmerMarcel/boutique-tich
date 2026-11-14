@@ -34,6 +34,21 @@ Avec les configurations Vercel fournies, l'API est normalement consommée via le
 réécritures `/api` et `/uploads`. Pour un hébergement différent, définissez
 `window.TICH_BACKEND_URL` explicitement.
 
+### Déploiement Vercel
+
+Pour ce monorepo, le projet Vercel du client doit utiliser :
+
+```text
+Root Directory: client
+Framework Preset: Other
+Build Command: vide
+Output Directory: vide
+Install Command: vide
+```
+
+Le fichier `vercel.json` doit rester dans ce dossier. Ne lancez pas `npm start`
+sur Vercel : `server.js` est uniquement destiné au développement local.
+
 ---
 
 ## 📂 Contenu du dossier
