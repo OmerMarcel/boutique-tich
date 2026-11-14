@@ -1,0 +1,14 @@
+{
+  "cleanUrls": true,
+  "outputDirectory": "client",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://boutique-tich.onrender.com/api/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://boutique-tich.onrender.com/uploads/:path*"
+    }
+  ]
+}
