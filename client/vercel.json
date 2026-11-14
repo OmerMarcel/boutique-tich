@@ -1,14 +1,16 @@
 {
   "cleanUrls": true,
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/:path*",
-      "destination": "https://boutique-tich.onrender.com/api/:path*"
+      "src": "/api/(.*)",
+      "dest": "https://boutique-tich.onrender.com/api/$1"
     },
     {
-      "source": "/uploads/:path*",
-      "destination": "https://boutique-tich.onrender.com/uploads/:path*"
-    }
+      "src": "/uploads/(.*)",
+      "dest": "https://boutique-tich.onrender.com/uploads/$1"
+    },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
 
