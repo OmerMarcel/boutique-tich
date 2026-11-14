@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const attempts = new Map();
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_ATTEMPTS = 10;
+const SESSION_TTL = process.env.ADMIN_SESSION_TTL || "7d";
 const configuredPasswordHash = process.env.ADMIN_PASSWORD_HASH;
 const configuredPassword = process.env.ADMIN_PASSWORD;
 const passwordHashPromise = configuredPasswordHash
@@ -42,8 +43,8 @@ router.post("/login", async (req, res) => {
     }
 
     attempts.delete(source);
-    const token = jwt.sign({ role: "admin", username }, process.env.JWT_SECRET, { expiresIn: "24h" });
-    res.json({ token, expiresIn: "24h" });
+    const token = jwt.sign({ role: "admin", username }, process.env.JWT_SECRET, { expiresIn: SESSION_TTL });
+    res.json({ token, expiresIn: SESSION_TTL });
   } catch (e) {
     console.error("Erreur login:", e);
     res.status(500).json({ error: "Erreur serveur" });

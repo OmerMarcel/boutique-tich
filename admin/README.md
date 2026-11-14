@@ -16,6 +16,9 @@ Puis accédez à :
 
 *(Les identifiants sont obligatoirement configurés dans le fichier `.env` du backend.)*
 
+La session admin est conservée entre les rechargements et les onglets pendant la
+durée définie par `ADMIN_SESSION_TTL` dans le backend (7 jours par défaut).
+
 ---
 
 ## ⚙️ Configuration de l'API Backend

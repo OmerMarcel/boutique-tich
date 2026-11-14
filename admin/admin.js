@@ -34,15 +34,35 @@ function resolveAdminMediaUrl(url) {
 }
 
 function getToken() {
-  return sessionStorage.getItem("tich-admin-token");
+  const storedToken = localStorage.getItem("tich-admin-token") || sessionStorage.getItem("tich-admin-token");
+  if (!storedToken) return null;
+  if (isTokenExpired(storedToken)) {
+    clearToken();
+    return null;
+  }
+  localStorage.setItem("tich-admin-token", storedToken);
+  return storedToken;
 }
 
 function setToken(token) {
-  sessionStorage.setItem("tich-admin-token", token);
+  localStorage.setItem("tich-admin-token", token);
+  sessionStorage.removeItem("tich-admin-token");
 }
 
 function clearToken() {
+  localStorage.removeItem("tich-admin-token");
   sessionStorage.removeItem("tich-admin-token");
+}
+
+function isTokenExpired(token) {
+  try {
+    const encodedPayload = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+    const paddedPayload = encodedPayload.padEnd(encodedPayload.length + ((4 - encodedPayload.length % 4) % 4), "=");
+    const payload = JSON.parse(atob(paddedPayload));
+    return !payload.exp || payload.exp * 1000 <= Date.now();
+  } catch (e) {
+    return true;
+  }
 }
 
 async function apiRequest(method, path, body = null, isFormData = false) {

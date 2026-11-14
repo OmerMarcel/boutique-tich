@@ -30,6 +30,7 @@ JWT_SECRET=une_valeur_aleatoire_d_au_moins_32_caracteres
 ADMIN_USERNAME=votre_identifiant
 ADMIN_PASSWORD_HASH=un_hash_bcrypt_recommande
 CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+ADMIN_SESSION_TTL=7d
 
 # Supabase (PostgreSQL Cloud)
 SUPABASE_URL=https://votre-projet.supabase.co
