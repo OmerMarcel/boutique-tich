@@ -6,6 +6,14 @@
 // ==========================================================================
 // CONFIGURATION COMMANDE WHATSAPP & SYNCHRONISATION TEMPS RÉEL
 // ==========================================================================
+const STORAGE_VERSION = "2026-11-14";
+if (localStorage.getItem("tich-storage-version") !== STORAGE_VERSION) {
+  ["tich-wa-number", "tich-cart", "tich-favorites", "tich-discount"].forEach(key => {
+    localStorage.removeItem(key);
+  });
+  localStorage.setItem("tich-storage-version", STORAGE_VERSION);
+}
+
 // Numéro WhatsApp par défaut ou synchronisé depuis la base de données
 let WHATSAPP_PHONE = localStorage.getItem("tich-wa-number") || "33612345678";
 

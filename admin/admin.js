@@ -6,6 +6,12 @@
 // ============================================================
 // CONFIGURATION API & AUTH
 // ============================================================
+const STORAGE_VERSION = "2026-11-14";
+if (localStorage.getItem("tich-admin-storage-version") !== STORAGE_VERSION) {
+  localStorage.removeItem("tich-wa-number");
+  localStorage.setItem("tich-admin-storage-version", STORAGE_VERSION);
+}
+
 const BACKEND_URL = (typeof window !== "undefined" && window.TICH_BACKEND_URL) || (
   (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"))
     ? "http://localhost:5000"
