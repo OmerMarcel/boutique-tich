@@ -32,6 +32,22 @@ Pour personnaliser l'adresse de l'API (ex: API hébergée sur Render ou Supabase
 </script>
 ```
 
+### Stockage permanent des images
+
+Les images sont envoyées dans Supabase Storage et non plus sur le disque temporaire
+du serveur. Dans Supabase, créez un bucket public nommé `product-images` (ou utilisez
+un autre nom dans `SUPABASE_STORAGE_BUCKET`), puis configurez dans les variables
+d'environnement du backend :
+
+```env
+SUPABASE_URL=https://votre-projet.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=votre-clé-service-role
+SUPABASE_STORAGE_BUCKET=product-images
+```
+
+La clé `SUPABASE_SERVICE_ROLE_KEY` doit rester uniquement dans les variables
+d'environnement du backend et ne doit jamais être ajoutée au frontend.
+
 Le bouton « Voir la Boutique » ouvre par défaut `https://boutique-tich.vercel.app`.
 Pour remplacer cette adresse, définissez `window.TICH_CLIENT_URL` avant le
 chargement de `admin.js`.

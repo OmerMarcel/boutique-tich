@@ -399,7 +399,10 @@ async function uploadImage(file) {
   formData.append("image", file);
   const res = await apiRequest("POST", "/api/upload", formData, true);
   const data = await res.json();
-  return data.url; // "/uploads/xxxx.jpg"
+  if (!res.ok || !data.url) {
+    throw new Error(data.error || "Échec de l'upload de l'image");
+  }
+  return data.url;
 }
 
 // ==========================================================================

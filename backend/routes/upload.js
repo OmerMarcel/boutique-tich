@@ -4,18 +4,13 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
+const { createClient } = require("@supabase/supabase-js");
 const { requireAuth } = require("../middleware/authMiddleware");
 
 const uploadDir = path.join(__dirname, "..", "uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, Date.now() + "-" + crypto.randomBytes(12).toString("hex") + ext);
-  }
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
@@ -30,18 +25,68 @@ const upload = multer({
   }
 });
 
-router.post("/", requireAuth, upload.single("image"), (req, res, next) => {
+router.post("/", requireAuth, upload.single("image"), async (req, res, next) => {
   if (!req.file) return res.status(400).json({ error: "Aucun fichier reçu" });
-  const signature = fs.readFileSync(req.file.path).subarray(0, 12);
+  const signature = req.file.buffer.subarray(0, 12);
   const valid = isValidImageSignature(signature, req.file.mimetype);
   if (!valid) {
-    fs.unlinkSync(req.file.path);
     return res.status(400).json({ error: "Le contenu du fichier image est invalide" });
   }
-  res.json({ url: "/uploads/" + req.file.filename });
+
+  const supabaseUrl = (process.env.SUPABASE_URL || "").trim();
+  const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+  const bucket = (process.env.SUPABASE_STORAGE_BUCKET || "product-images").trim();
+
+  if (!supabaseUrl || !supabaseKey) {
+    if (process.env.NODE_ENV === "production") {
+      return res.status(503).json({
+        error: "Stockage image non configuré. Définissez SUPABASE_SERVICE_ROLE_KEY."
+      });
+    }
+
+    const filename = createFilename(req.file.originalname);
+    fs.writeFileSync(path.join(uploadDir, filename), req.file.buffer);
+    return res.json({ url: "/uploads/" + filename });
+  }
+
+  try {
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: { persistSession: false }
+    });
+    const filename = createFilename(req.file.originalname);
+    const storagePath = `products/${filename}`;
+    const { error } = await supabase.storage
+      .from(bucket)
+      .upload(storagePath, req.file.buffer, {
+        contentType: req.file.mimetype,
+        cacheControl: "31536000",
+        upsert: false
+      });
+
+    if (error) {
+      console.error("Erreur upload Supabase Storage:", error.message);
+      return res.status(502).json({ error: "Impossible de stocker l'image" });
+    }
+
+    const { data } = supabase.storage.from(bucket).getPublicUrl(storagePath);
+    if (!data?.publicUrl) {
+      console.error("Supabase Storage n'a pas fourni d'URL publique.");
+      return res.status(502).json({ error: "URL publique de l'image indisponible" });
+    }
+
+    return res.json({ url: data.publicUrl });
+  } catch (error) {
+    console.error("Erreur stockage image:", error);
+    return res.status(502).json({ error: "Impossible de stocker l'image" });
+  }
 });
 
 module.exports = router;
+
+function createFilename(originalName) {
+  const ext = path.extname(originalName).toLowerCase();
+  return Date.now() + "-" + crypto.randomBytes(12).toString("hex") + ext;
+}
 
 function isValidImageSignature(buffer, mimetype) {
   if (mimetype === "image/jpeg") return buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
